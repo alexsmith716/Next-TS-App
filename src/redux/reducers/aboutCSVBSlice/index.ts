@@ -43,9 +43,10 @@ const reducer = (state = {}, action: ActionLoadPromiseType | HydrateActionType) 
 export default reducer;
 
 export function loadAboutCSVB(): AnyAction {
+	const limit: number = Math.floor(Math.random() * 6) + 1;
 	return {
 		type: [ABOUTCSVB_LOAD, ABOUTCSVB_SUCCESS, ABOUTCSVB_FAIL],
-		httpClientPromise: ({httpClient}: {httpClient: AxiosInstance}) => httpClient.get('https://jsonplaceholder.typicode.com/posts?_limit=5')
+		httpClientPromise: ({httpClient}: {httpClient: AxiosInstance}) => httpClient.get(`https://jsonplaceholder.typicode.com/posts?_limit=${limit}`)
 			.then((response) => {
 				return {props: {posts: response,}};
 			})
