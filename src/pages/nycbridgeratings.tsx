@@ -15,7 +15,10 @@ const NYCBridgeRatings: NextPage = () => {
 
 	useEffect(() => {
 		if (!loaded) {
-			dispatch(loadNYCBridgeRatings());
+			dispatch(loadNYCBridgeRatings())
+				.catch((error: Error) => {
+					console.error(error);
+				})
 		}
 	}, [loaded, dispatch]);
 

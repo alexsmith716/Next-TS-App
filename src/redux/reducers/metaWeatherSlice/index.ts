@@ -31,7 +31,7 @@ const reducer = (state = {}, action: ActionLoadPromiseType | HydrateActionType) 
 				...state,
 				loading: false,
 				loaded: false,
-				metaWeatherData: {error: 'Error when attempting to fetch resource.'},
+				metaWeatherData: action['error'],
 			};
 		default:
 			return {
@@ -42,6 +42,19 @@ const reducer = (state = {}, action: ActionLoadPromiseType | HydrateActionType) 
 
 export default reducer;
 
+export function loadMetaWeatherServer(): AnyAction {
+	return {
+		type: [METAWEATHER_LOAD, METAWEATHER_SUCCESS, METAWEATHER_FAIL],
+		httpClientPromise: ({httpClient}: {httpClient: AxiosInstance}) => httpClient.get('https://www.metaweather.com/api/location/2459115')
+			.then((response) => {
+				return response;
+			})
+			.catch(() => {
+				return Promise.reject({ error: 'Error when attempting to fetch resource.' });
+			})
+	};
+};
+
 export function loadMetaWeather(): AnyAction {
 	return {
 		type: [METAWEATHER_LOAD, METAWEATHER_SUCCESS, METAWEATHER_FAIL],
@@ -49,8 +62,8 @@ export function loadMetaWeather(): AnyAction {
 			.then((response) => {
 				return response;
 			})
-			.catch((error) => {
-				return Promise.reject(error);
+			.catch(() => {
+				return Promise.reject({ error: 'Error when attempting to fetch resource.' });
 			})
 	};
 };
