@@ -31,7 +31,7 @@ const reducer = (state = {}, action: ActionLoadPromiseType | HydrateActionType) 
 				...state,
 				loading: false,
 				loaded: false,
-				aboutCSVBData: {error: 'Error when attempting to fetch resource.'},
+				aboutCSVBData: action['error'],
 			};
 		default:
 			return {
@@ -51,7 +51,7 @@ export function loadAboutCSVB(): AnyAction {
 				return {props: {posts: response,}};
 			})
 			.catch(() => {
-				return Promise.reject();
+				return Promise.reject({ error: 'Error when attempting to fetch resource.' });
 			})
 	};
 };
