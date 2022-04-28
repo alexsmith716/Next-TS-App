@@ -29,5 +29,5 @@ This is my first try with Next.js. The goal of this repo is to become familiar w
 - Environment Variables
 
 ## To-do list:
-* Remove `createStore` and use Redux Toolkit
+* Integrate more of Redux Toolkit API
 * Go back over TS typing
