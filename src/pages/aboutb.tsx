@@ -1,4 +1,5 @@
 import type { NextPage } from 'next';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Loading from '../components/Loading/Loading';
 import * as Styles from '../styles/styles-about';
@@ -8,21 +9,28 @@ import Link from 'next/link';
 
 const fetcher = (url: string) => fetch(url).then((res) => res.json());
 
-const AboutB: NextPage = () => {
+interface AboutBPageProps {
+	documentTitle: string;
+};
+
+const AboutB: NextPage<AboutBPageProps> = ({documentTitle}) => {
 	const { data, error } = useSwr('/api/users', fetcher);
 
-	//if (error) return <div>Failed to load users</div>;
-	//if (!data) return <div>Loading...</div>;
+	const [title, setTitle] = useState('');
+
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'AboutB');
+	}, [documentTitle]);
 
 	return (
 		<>
 			<Head>
-				<title>AboutB</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 
 			<div className="container">
 
-				<h1 className="mt-4 mb-3">AboutB (API / users.js)</h1>
+				<h1 className="mt-4 mb-3">AboutB</h1>
 
 				<div className="row-grid grid-six bg-lightskyblue-1 mb-5">
 					<div className="col-grid mb-4">
@@ -36,7 +44,7 @@ const AboutB: NextPage = () => {
 					<div className="col-grid">
 						<h2>AboutB</h2>
 						<p>
-							<b>This component utilizes SWR.</b>
+							<b>This component utilizes the AboutB.</b>
 						</p>
 
 						<div className="custom-pp">AboutB.</div>

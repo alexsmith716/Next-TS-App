@@ -1,4 +1,5 @@
 import type { NextPage, GetServerSideProps } from 'next';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import { useSelector } from 'react-redux';
 import * as Styles from '../styles/styles-about';
@@ -14,23 +15,30 @@ export const getServerSideProps: GetServerSideProps = wrapper.getServerSideProps
 		})
 });
 
-interface AboutCSVBPageProps {};
+interface AboutCSVBPageProps {
+	documentTitle: string;
+};
 
-const AboutCSVB: NextPage<AboutCSVBPageProps> = () => {
+const AboutCSVB: NextPage<AboutCSVBPageProps> = ({documentTitle}) => {
 	let postsData;
 
 	const loading = useSelector((state: AppState) => state.aboutCSVBReducer.loading);
 	const loaded = useSelector((state: AppState) => state.aboutCSVBReducer.loaded);
 	const aboutCSVBData = useSelector((state: AppState) => state.aboutCSVBReducer.aboutCSVBData);
+	const [title, setTitle] = useState('');
 
 	if(aboutCSVBData && !aboutCSVBData.error) {
 		postsData = aboutCSVBData.props.posts;
 	}
 
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'AboutCSVB');
+	}, [documentTitle]);
+
 	return (
 		<>
 			<Head>
-				<title>AboutCSVB</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 
 			<div className="container">

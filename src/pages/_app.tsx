@@ -40,6 +40,7 @@ App.getInitialProps = wrapper.getInitialAppProps((store) => async ({ Component, 
 					store,
 				})
 			: {}),
+		documentTitle: 'Alex Smith\'s App',
 	};
 
 	return {

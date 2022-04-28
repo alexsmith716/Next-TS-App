@@ -1,12 +1,23 @@
 import type { NextPage } from 'next';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Home from '../components/Home/Home';
 
-const IndexPage: NextPage = () => {
+interface IndexPageProps {
+	documentTitle: string;
+};
+
+const IndexPage: NextPage<IndexPageProps> = ({documentTitle}) => {
+	const [title, setTitle] = useState('');
+
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'Home');
+	}, [documentTitle]);
+
 	return (
 		<>
 			<Head>
-				<title>Home</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 			<Home />
 		</>

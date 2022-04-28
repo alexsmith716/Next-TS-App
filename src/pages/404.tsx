@@ -1,18 +1,27 @@
-import React, { FC } from 'react';
+import type { NextPage } from 'next';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import styled from 'styled-components';
 
-interface NotFoundProps {};
+interface NotFoundProps {
+	documentTitle: string;
+};
 
 const StyledHeadingOne = styled.h1`
 	color: #000;
 `;
 
-const NotFound: FC<NotFoundProps> = () => {
+const NotFound: NextPage<NotFoundProps> = ({documentTitle}) => {
+	const [title, setTitle] = useState('');
+
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'Status Code 404');
+	}, [documentTitle]);
+
 	return (
 		<>
 			<Head>
-				<title>Status Code 404</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 
 			<div className="container">
