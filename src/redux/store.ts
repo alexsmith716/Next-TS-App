@@ -1,5 +1,6 @@
 import { createWrapper } from 'next-redux-wrapper';
-import { applyMiddleware, combineReducers, createStore, compose, Middleware } from 'redux';
+import { configureStore } from '@reduxjs/toolkit';
+import { combineReducers, Middleware } from 'redux';
 import { AxiosInstance } from 'axios';
 //@ts-ignore
 import persistStore from 'redux-persist/es/persistStore';
@@ -11,7 +12,6 @@ import metaWeatherReducer from './reducers/metaWeatherSlice';
 import aboutCSVBReducer from './reducers/aboutCSVBSlice';
 import apiClient from '../utils/apiClient';
 //import storage from './create_sync_storage';
-//import storage from 'localforage';
 
 export interface ApiClient {
 	httpClient: AxiosInstance;
@@ -36,9 +36,10 @@ const logger: Middleware = store => next => action => {
 
 const bindMiddleware = (middleware: any) => {
 	if (process.env.NODE_ENV !== 'production') {
-		return compose(applyMiddleware(...middleware, logger))
+		middleware.push(logger);
+		return middleware;
 	}
-	return applyMiddleware(...middleware)
+	return middleware;
 }
 
 const makeStore = () => {
@@ -46,13 +47,15 @@ const makeStore = () => {
 	const providers = { httpClient: api };
 	const isServer = typeof window === 'undefined';
 
-	// *********** will ASAP be converted to RTK ***********
 	if (isServer) {
-		return createStore(rootReducer, bindMiddleware([clientMiddleware(providers)]) );
+		return configureStore({
+			reducer: rootReducer,
+			middleware: bindMiddleware([clientMiddleware(providers)]),
+		});
 	} else {
 		const { persistStore, persistReducer } = require('redux-persist');
 		const storage = require('redux-persist/lib/storage').default;
-
+	
 		const persistConfig = {
 			key: 'root',
 			whitelist: [
@@ -64,18 +67,18 @@ const makeStore = () => {
 			],
 			storage,
 		};
-
+	
 		const persistedReducer = persistReducer(persistConfig, rootReducer);
-
-		const store = createStore(persistedReducer, bindMiddleware([clientMiddleware(providers)]) );
-
-		// create a persistor object & enable persistability
+	
+		const store = configureStore({
+			reducer: persistedReducer,
+			middleware: bindMiddleware([clientMiddleware(providers)]),
+		});
+	
 		persistStore(store);
-
 		return store;
 	}
-};
+}
 
 export type AppState = ReturnType<typeof rootReducer>;
-
 export const wrapper = createWrapper(makeStore);
