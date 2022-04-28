@@ -1,18 +1,26 @@
 import type { NextPage } from 'next';
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Head from 'next/head';
 import Button from '../components/Button';
 import * as Styles from '../styles/styles-about';
 
-interface AboutPageProps {};
+interface AboutPageProps {
+	documentTitle: string;
+};
 
-const About: NextPage<AboutPageProps> = () => {
+const About: NextPage<AboutPageProps> = ({documentTitle}) => {
 	const [toggleCustomerState, setToggleCustomerState] = useState(true);
+
+	const [title, setTitle] = useState('');
+
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'About');
+	}, [documentTitle]);
 
 	return (
 		<>
 			<Head>
-				<title>About</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 
 			<div className="container">

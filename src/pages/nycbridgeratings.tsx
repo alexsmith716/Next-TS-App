@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import type { NextPage } from 'next';
 import Head from 'next/head';
 import { useSelector, useDispatch } from 'react-redux';
@@ -6,12 +6,17 @@ import { AppState } from '../redux/store';
 import { loadNYCBridgeRatings } from '../redux/reducers/nycBridgeRatingsSlice';
 import Loading from '../components/Loading/Loading';
 
-const NYCBridgeRatings: NextPage = () => {
+interface NYCBridgeRatingsPageProps {
+	documentTitle: string;
+};
+
+const NYCBridgeRatings: NextPage<NYCBridgeRatingsPageProps> = ({documentTitle}) => {
 	const dispatch = useDispatch();
 
 	const loading = useSelector((state: AppState) => state.nycBridgeRatingsReducer.loading);
 	const loaded = useSelector((state: AppState) => state.nycBridgeRatingsReducer.loaded);
 	const data = useSelector((state: AppState) => state.nycBridgeRatingsReducer.dateNowData);
+	const [title, setTitle] = useState('');
 
 	useEffect(() => {
 		if (!loaded) {
@@ -22,10 +27,14 @@ const NYCBridgeRatings: NextPage = () => {
 		}
 	}, [loaded, dispatch]);
 
+	useEffect(() => {
+		setTitle(documentTitle+':'+String.fromCharCode(160)+'NYCBridgeRatings');
+	}, [documentTitle]);
+
 	return (
 		<>
 			<Head>
-				<title>NYC Bridge Ratings</title>
+				<title>{ !title ? documentTitle : title }</title>
 			</Head>
 
 			<div className="container">
